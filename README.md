@@ -1,93 +1,119 @@
-# IR Face — desbloqueo facial por infrarrojos (v0.3)
+# IR Face
 
-Xiaomi Mi 8 (dipper) · LineageOS 22 · Magisk. Sin recompilar LineageOS.
+Real **infrared** face unlock for the **Xiaomi Mi 8 (dipper)** running LineageOS / AOSP
+custom ROMs, where the stock MIUI face unlock is gone.
 
-## Cómo funciona
+It uses the phone's dedicated IR camera and IR emitter — the same hardware MIUI used — so
+it works in complete darkness and is much harder to fool with a photo than a selfie-camera
+unlock. No need to recompile the ROM: everything ships as a Magisk module.
 
-- **Hardware:** cámara 5 (OV7251, infrarrojos) + emisor `/sys/class/leds/ir_torch`.
-- **Reconocimiento:** YuNet (detección) + SFace (reconocimiento), todo en el teléfono.
-- **Desbloqueo:** IR Face es un *agente de confianza* con **Active Unlock**, el mecanismo
-  oficial de Android 13+ que usa Google para desbloquear con el reloj:
-  1. Cada vez que desbloqueas (PIN, huella o cara), IR Face concede confianza "renovable".
-  2. Al bloquearse el teléfono, Android la deja en espera.
-  3. Al encender la pantalla, IR Face enciende el emisor ~3 s, te reconoce y renueva la
-     confianza pidiendo quitar la pantalla de bloqueo.
-- **Seguridad (igual que Android exige a cualquier desbloqueo "débil"):** tras reiniciar y tras
-  los plazos de seguridad de Android (horas sin usarlo), pide PIN o huella una vez.
-  No sirve para apps de banca/pagos que exigen biometría fuerte (MIUI tampoco lo permitía).
-- **Módulo de Magisk:** instala IR Face como app privilegiada del sistema, le da el permiso de
-  agente de confianza, hace visible la cámara 5 y concede la cámara en cada arranque.
-  Sobrevive a las actualizaciones de LineageOS junto con Magisk.
+> **Heads up:** this is a *weak* biometric, just like the original Mi 8 face unlock. It
+> unlocks the lock screen, but Android still asks for your PIN/fingerprint after a reboot
+> and after its security timeouts, and banking/payment apps that require strong biometrics
+> won't use it.
 
----
+## How it works
 
-## 1. Compilar
+- **Hardware** — camera id `5` (OV7251 IR sensor) + the `/sys/class/leds/ir_torch` emitter.
+- **Recognition** — [YuNet](https://github.com/opencv/opencv_zoo/tree/main/models/face_detection_yunet)
+  for detection and [SFace](https://github.com/opencv/opencv_zoo/tree/main/models/face_recognition_sface)
+  for recognition, both running fully on-device via OpenCV. Your face is stored locally as a
+  set of embeddings; no image ever leaves the phone.
+- **Unlocking** — IR Face is a **trust agent** using Android's *Active Unlock* (API 13+),
+  the same mechanism Google uses for watch-unlock. When the screen turns on while locked, it
+  briefly fires the IR emitter, recognizes your face and dismisses the keyguard.
+- **Magisk module** — installs IR Face as a privileged system app, grants it the trust-agent
+  permission, makes the IR camera visible and re-applies everything on every boot. It
+  survives LineageOS updates alongside Magisk.
 
-Los modelos ya deben estar en `app/src/main/assets` (de la fase 1).
+## Features
 
-Android Studio: **Build → Build App Bundle(s) / APK(s) → Build APK(s)**.
+- Real IR face unlock (works in the dark).
+- MIUI-style animated lock-screen icon: searching → shakes "no" / check mark on success.
+  Tap it to retry. Optional, size and position adjustable.
+- "Swipe to enter after recognition" (MIUI-style) or instant unlock.
+- Localized UI and lock-screen messages: English, Spanish, Catalan (follows system language).
+- Adjustable recognition threshold; enrol multiple looks (e.g. with and without glasses).
 
-## 2. Crear el módulo
+## Requirements
+
+- Xiaomi Mi 8 (**dipper**) — see *Porting* below for other devices.
+- A custom ROM that exposes the IR camera (LineageOS 22 / Android 15 tested).
+- **Magisk** (root).
+- Android Studio (or the Android SDK) to build the APK.
+
+## Build
+
+1. Download the two ONNX models into `app/src/main/assets/` *(skip this if they are already
+   committed in the repo)*:
+   ```bash
+   cd app/src/main/assets
+   curl -L -o face_detection_yunet_2023mar.onnx \
+     https://github.com/opencv/opencv_zoo/raw/main/models/face_detection_yunet/face_detection_yunet_2023mar.onnx
+   curl -L -o face_recognition_sface_2021dec.onnx \
+     https://github.com/opencv/opencv_zoo/raw/main/models/face_recognition_sface/face_recognition_sface_2021dec.onnx
+   cd ../../../..
+   ```
+2. Build the APK (Android Studio: *Build → Build APK(s)*, or from the terminal):
+   ```bash
+   export ANDROID_HOME=$HOME/Android/Sdk
+   ./gradlew assembleDebug
+   ```
+
+## Install
 
 ```bash
-./make_module.sh        # genera IrFace-magisk.zip  (necesita zip/unzip)
-```
-
-## 3. Instalar
-
-```bash
-adb uninstall org.irface                 # quita el prototipo (habrá que registrar la cara otra vez)
+./make_module.sh                       # bundles the APK into IrFace-magisk.zip
 adb push IrFace-magisk.zip /sdcard/Download/
-```
-
-En el teléfono: **Magisk → Módulos → Instalar desde almacenamiento →** `IrFace-magisk.zip`
-→ **Reiniciar**.
-
-## 4. Configurar (una vez)
-
-1. Abre **IR Face**. Magisk pedirá superusuario: **Conceder** (para siempre).
-2. **Registrar** (con gafas) y otra vez **Registrar** (sin gafas). Comprueba con **Verificar**.
-   El umbral ya viene en 0.60.
-3. Pulsa **Agentes de confianza** y activa **IR Face**.
-   (También en Ajustes → Seguridad y privacidad → Más ajustes de seguridad → Agentes de confianza.)
-4. Bloquea, desbloquea **una vez con PIN o huella**, y vuelve a bloquear.
-5. Enciende la pantalla y mira al teléfono → debería desbloquearse.
-
-## Opciones de la pantalla de bloqueo (en la app)
-
-- **Deslizar para entrar tras reconocerme** (activado por defecto): al reconocerte, el candado
-  se abre pero la pantalla de bloqueo se queda hasta que deslizas, como en MIUI.
-  Desactívalo para entrar directamente.
-- **Mensajes en la pantalla de bloqueo**: "Cara no reconocida" / "Cara reconocida · desliza para entrar".
-- **Carita animada (estilo MIUI)**: busca → niega con la cabeza si no te reconoce → tick si te
-  reconoce. **Toca la carita para reintentar.** Se dibuja con un servicio de accesibilidad
-  (es la única forma de dibujar encima de la pantalla de bloqueo); no lee la pantalla.
-  Algunas apps de banca avisan cuando hay servicios de accesibilidad activos: si te molesta,
-  desactiva solo la carita.
-- **Probar carita / Carita ↑ ↓**: vista previa y ajuste de la posición.
-
-## Actualizar a una versión nueva
-
-Compila, ejecuta `./make_module.sh` y vuelve a instalar el módulo (reemplaza al anterior;
-tu cara registrada y tus ajustes se conservan):
-
-```bash
-adb push IrFace-magisk.zip /sdcard/Download/
-adb root
-adb shell magisk --install-module /sdcard/Download/IrFace-magisk.zip
+adb shell su -c "magisk --install-module /sdcard/Download/IrFace-magisk.zip"
 adb reboot
 ```
 
-**No instales el APK suelto con `adb install`**: el módulo trae también los permisos que necesita.
+Then:
 
-## Diagnóstico
+1. Open **IR Face**, grant superuser when Magisk asks.
+2. **Enrol** your face (do it once with glasses and once without).
+3. Tap **Trust agents** and enable **IR Face**.
+4. Unlock once with PIN/fingerprint, lock the phone, then turn the screen on.
+
+## Configuration (device-specific values)
+
+These constants are specific to the Mi 8. To adapt to another device, change:
+
+| What | Where |
+|------|-------|
+| IR camera id (`5`) | `Store.CAMERA_ID` |
+| IR emitter path (`/sys/class/leds/ir_torch`) | `IrLed.LED_PATH`, and `post-fs-data.sh` / `service.sh` |
+| Camera allow-list property | `magisk-module/post-fs-data.sh` |
+| Recognition threshold | in-app, or `Store.DEFAULT_THRESHOLD` |
+
+Find your device's IR camera and emitter with:
 
 ```bash
-adb logcat -s IRFACE TrustManagerService TrustAgentWrapper
+adb shell dumpsys media.camera | grep -iE "Facing|pixelArraySize"
+adb shell ls /sys/class/leds
 ```
 
-## Si algo va mal
+## Porting to other devices
 
-- Desactiva el módulo en Magisk → Módulos y reinicia.
-- Si el teléfono no arrancara: conéctalo y ejecuta
-  `adb wait-for-device shell magisk --remove-modules` (desactiva todos los módulos y reinicia).
+- **Plug-and-play:** other Mi 8 (dipper) units on LineageOS / AOSP ROMs.
+- **With the edits above:** other phones that still expose a front IR camera + emitter to
+  AOSP. Many devices hide this hardware from AOSP, in which case it can't work.
+- **As a template:** the Active-Unlock trust-agent + OpenCV approach also works with the
+  normal front camera (2D), if you only want selfie-camera face unlock on AOSP.
+
+## Security
+
+This is a convenience unlock, not a strong biometric. It does not use the device's secure
+enclave (only the OEM can), so Android treats it as weak: PIN/fingerprint is still required
+after reboot and periodic timeouts, and it can't authorize payments. IR makes spoofing with
+a photo on a screen much harder (screens barely reflect IR), but it is not foolproof.
+
+## Credits & license
+
+- Face models from the [OpenCV Zoo](https://github.com/opencv/opencv_zoo):
+  YuNet (MIT), SFace (Apache-2.0).
+- [OpenCV](https://opencv.org/) (Apache-2.0).
+- Packaging via [Magisk](https://github.com/topjohnwu/Magisk).
+
+Project code: see [LICENSE](LICENSE).
