@@ -1,3 +1,5 @@
+<img src="./assets/icon.png" align="right" width="70" alt="IR Face logo">
+
 # IR Face
 
 Real **infrared** face unlock for the **Xiaomi Mi 8 (dipper)** running LineageOS / AOSP
@@ -44,17 +46,7 @@ unlock. No need to recompile the ROM: everything ships as a Magisk module.
 
 ## Build
 
-1. Download the two ONNX models into `app/src/main/assets/` *(skip this if they are already
-   committed in the repo)*:
-   ```bash
-   cd app/src/main/assets
-   curl -L -o face_detection_yunet_2023mar.onnx \
-     https://github.com/opencv/opencv_zoo/raw/main/models/face_detection_yunet/face_detection_yunet_2023mar.onnx
-   curl -L -o face_recognition_sface_2021dec.onnx \
-     https://github.com/opencv/opencv_zoo/raw/main/models/face_recognition_sface/face_recognition_sface_2021dec.onnx
-   cd ../../../..
-   ```
-2. Build the APK (Android Studio: *Build → Build APK(s)*, or from the terminal):
+Build the APK (Android Studio: *Build → Build APK(s)*, or from the terminal):
    ```bash
    export ANDROID_HOME=$HOME/Android/Sdk
    ./gradlew assembleDebug
