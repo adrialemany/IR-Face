@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Lock screen (trust agent) -->
+    <string name="msg_face_recognized_swipe">Face recognized · swipe to open</string>
+    <string name="msg_face_unlocked">Unlocked with your face</string>
+    <string name="msg_face_not_recognized">Face not recognized</string>
+    <string name="trust_agent_summary">Face unlock with the infrared camera</string>
+    <string name="indicator_description">Shows the IR Face icon (searching, not recognized, recognized) on top of the lock screen. It does not read or store anything shown on the screen.</string>
+
+    <!-- Status / detail -->
+    <string name="status_starting">Starting…</string>
+    <string name="status_opencv_fail">Could not load OpenCV</string>
+    <string name="detail_root_ok">Root OK: the IR emitter works.</string>
+    <string name="detail_no_root">No root: grant superuser to IR Face in Magisk.</string>
+    <string name="status_no_camera_perm">No camera permission</string>
+    <string name="ready">Ready.</string>
+
+    <!-- Enrol / verify -->
+    <string name="enroll_cancelled">Enrolment cancelled: not enough samples captured</string>
+    <string name="verify_end">Verification finished. Best score: %1$s</string>
+    <string name="enrolling_progress">Enrolling… %1$d/%2$d  (move your head a little)</string>
+    <string name="enrolled_done">Enrolled. Samples saved: %1$d. You can enrol again (e.g. without glasses) to add more.</string>
+    <string name="enroll_multi_face">More than one face</string>
+    <string name="enroll_center">Move closer / center your face</string>
+    <string name="verify_need_enroll">Enrol your face first</string>
+    <string name="recognized">RECOGNIZED  (%1$s ≥ %2$s)</string>
+    <string name="not_match">No match  (%1$s &lt; %2$s)</string>
+    <string name="enroll_no_face">Enrolling: no face detected</string>
+    <string name="verify_no_face">Verifying: no face detected</string>
+    <string name="status_enrolling">Enrolling… look at the phone 30-40 cm away</string>
+    <string name="status_verifying">Verifying…</string>
+    <string name="status_stopped">Stopped</string>
+    <string name="status_enroll_cleared">Enrolment cleared</string>
+
+    <!-- Images -->
+    <string name="img_saved">Image saved: %1$s</string>
+    <string name="img_save_fail">Could not save the image</string>
+
+    <!-- Buttons -->
+    <string name="btn_enroll">Enrol</string>
+    <string name="btn_verify">Verify</string>
+    <string name="btn_stop">Stop</string>
+    <string name="btn_threshold_minus">Threshold −</string>
+    <string name="btn_threshold_plus">Threshold +</string>
+    <string name="btn_save_image">Save image</string>
+    <string name="btn_clear_enroll">Clear enrolment</string>
+    <string name="btn_trust_agents">Trust agents</string>
+    <string name="btn_test_icon">Test icon</string>
+    <string name="btn_icon_up">Icon ↑</string>
+    <string name="btn_icon_down">Icon ↓</string>
+    <string name="btn_size_minus">Size −</string>
+    <string name="btn_size_plus">Size +</string>
+    <string name="rot_auto">Rot: auto</string>
+    <string name="rot_deg">Rot: %1$d°</string>
+
+    <!-- Checkboxes -->
+    <string name="chk_require_swipe">Swipe to enter after recognition</string>
+    <string name="chk_show_messages">Messages on the lock screen</string>
+    <string name="chk_animated_icon">Animated face icon (MIUI style)</string>
+    <string name="status_icon_change_fail">Could not change it (module permission missing?)</string>
+    <string name="status_icon_on">Face icon enabled</string>
+    <string name="status_icon_off">Face icon disabled</string>
+    <string name="status_enable_icon_first">Enable \"Animated face icon\" first</string>
+    <string name="status_icon_size">Face icon size: %1$d dp</string>
+    <string name="status_icon_pos">Face icon position: %1$d dp from top</string>
+
+    <!-- Camera -->
+    <string name="cam_not_visible">Camera %1$s is not visible to this app (visible: %2$s).\nAdd org.irface to vendor.camera.aux.packagelist and restart cameraserver (see README).</string>
+    <string name="cam_info">Camera %1$s: %2$d×%3$d, sensor orientation %4$d°</string>
+    <string name="cam_disconnected">Camera disconnected (is another app using it?)</string>
+    <string name="cam_error">Camera error: %1$d</string>
+    <string name="cam_open_fail">Could not open the camera: %1$s</string>
+    <string name="cam_capture_fail">Could not start capture: %1$s</string>
+    <string name="cam_session_fail">Camera session configuration failed</string>
+    <string name="cam_session_create_fail">Could not create the session: %1$s</string>
+</resources>

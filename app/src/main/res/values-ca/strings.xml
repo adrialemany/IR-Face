@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="msg_face_recognized_swipe">Cara reconeguda · llisca per entrar</string>
+    <string name="msg_face_unlocked">Desbloquejat amb la teva cara</string>
+    <string name="msg_face_not_recognized">Cara no reconeguda</string>
+    <string name="trust_agent_summary">Desbloqueig facial amb la càmera d\'infrarojos</string>
+    <string name="indicator_description">Mostra la careta d\'IR Face (cercant, no reconeguda, reconeguda) damunt de la pantalla de bloqueig. No llegeix ni desa res del que hi ha a la pantalla.</string>
+
+    <string name="status_starting">Iniciant…</string>
+    <string name="status_opencv_fail">No s\'ha pogut carregar OpenCV</string>
+    <string name="detail_root_ok">Root OK: l\'emissor IR funciona.</string>
+    <string name="detail_no_root">Sense root: concedeix superusuari a IR Face al Magisk.</string>
+    <string name="status_no_camera_perm">Sense permís de càmera</string>
+    <string name="ready">A punt.</string>
+
+    <string name="enroll_cancelled">Registre cancel·lat: no s\'han captat prou mostres</string>
+    <string name="verify_end">Fi de la verificació. Millor puntuació: %1$s</string>
+    <string name="enrolling_progress">Registrant… %1$d/%2$d  (mou una mica el cap)</string>
+    <string name="enrolled_done">Registrat. Mostres desades: %1$d. Pots registrar un altre cop (p. ex. sense ulleres) per afegir-ne més.</string>
+    <string name="enroll_multi_face">Hi ha més d\'una cara</string>
+    <string name="enroll_center">Acosta\'t / centra\'t</string>
+    <string name="verify_need_enroll">Primer registra la teva cara</string>
+    <string name="recognized">RECONEGUDA  (%1$s ≥ %2$s)</string>
+    <string name="not_match">No coincideix  (%1$s &lt; %2$s)</string>
+    <string name="enroll_no_face">Registrant: no veig cap cara</string>
+    <string name="verify_no_face">Verificant: no veig cap cara</string>
+    <string name="status_enrolling">Registrant… mira el telèfon a 30-40 cm</string>
+    <string name="status_verifying">Verificant…</string>
+    <string name="status_stopped">Aturat</string>
+    <string name="status_enroll_cleared">Registre esborrat</string>
+
+    <string name="img_saved">Imatge desada: %1$s</string>
+    <string name="img_save_fail">No s\'ha pogut desar la imatge</string>
+
+    <string name="btn_enroll">Registrar</string>
+    <string name="btn_verify">Verificar</string>
+    <string name="btn_stop">Aturar</string>
+    <string name="btn_threshold_minus">Llindar −</string>
+    <string name="btn_threshold_plus">Llindar +</string>
+    <string name="btn_save_image">Desar imatge</string>
+    <string name="btn_clear_enroll">Esborrar registre</string>
+    <string name="btn_trust_agents">Agents de confiança</string>
+    <string name="btn_test_icon">Provar careta</string>
+    <string name="btn_icon_up">Careta ↑</string>
+    <string name="btn_icon_down">Careta ↓</string>
+    <string name="btn_size_minus">Mida −</string>
+    <string name="btn_size_plus">Mida +</string>
+    <string name="rot_auto">Rot: auto</string>
+    <string name="rot_deg">Rot: %1$d°</string>
+
+    <string name="chk_require_swipe">Lliscar per entrar quan em reconegui</string>
+    <string name="chk_show_messages">Missatges a la pantalla de bloqueig</string>
+    <string name="chk_animated_icon">Careta animada (estil MIUI)</string>
+    <string name="status_icon_change_fail">No s\'ha pogut canviar (falta el permís del mòdul?)</string>
+    <string name="status_icon_on">Careta activada</string>
+    <string name="status_icon_off">Careta desactivada</string>
+    <string name="status_enable_icon_first">Activa primer «Careta animada»</string>
+    <string name="status_icon_size">Mida de la careta: %1$d dp</string>
+    <string name="status_icon_pos">Posició de la careta: %1$d dp des de dalt</string>
+
+    <string name="cam_not_visible">La càmera %1$s no és visible per a aquesta app (visibles: %2$s).\nAfegeix org.irface a vendor.camera.aux.packagelist i reinicia cameraserver (vegeu README).</string>
+    <string name="cam_info">Càmera %1$s: %2$d×%3$d, orientació sensor %4$d°</string>
+    <string name="cam_disconnected">Càmera desconnectada (alguna altra app l\'està fent servir?)</string>
+    <string name="cam_error">Error de càmera: %1$d</string>
+    <string name="cam_open_fail">No s\'ha pogut obrir la càmera: %1$s</string>
+    <string name="cam_capture_fail">No s\'ha pogut iniciar la captura: %1$s</string>
+    <string name="cam_session_fail">Ha fallat la configuració de la sessió de càmera</string>
+    <string name="cam_session_create_fail">No s\'ha pogut crear la sessió: %1$s</string>
+</resources>

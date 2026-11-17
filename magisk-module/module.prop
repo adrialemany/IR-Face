@@ -1,0 +1,6 @@
+id=irface
+name=IR Face Unlock
+version=v0.8
+versionCode=8
+author=alemany
+description=Desbloqueo facial por infrarrojos (Xiaomi Mi 8, LineageOS) mediante agente de confianza con Active Unlock.

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Permiso privilegiado: lo concede la lista blanca del módulo de Magisk -->
+    <uses-permission android:name="android.permission.PROVIDE_TRUST_AGENT" />
+    <!-- Privilegiado: para activar/desactivar la carita (servicio de accesibilidad) desde la app -->
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+    <uses-feature android:name="android.hardware.camera.any" android:required="false" />
+
+    <!-- persistent: al ser app de sistema, Android la mantiene viva y con acceso a la
+         cámara aunque esté en segundo plano (necesario en la pantalla de bloqueo). -->
+    <application
+        android:label="IR Face"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:persistent="true"
+        android:theme="@android:style/Theme.Material.NoActionBar">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".IrTrustAgent"
+            android:exported="true"
+            android:label="IR Face"
+            android:permission="android.permission.BIND_TRUST_AGENT">
+            <intent-filter>
+                <action android:name="android.service.trust.TrustAgentService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.trust.trustagent"
+                android:resource="@xml/trust_agent" />
+        </service>
+
+        <!-- Solo dibuja la carita encima de la pantalla de bloqueo; no lee la pantalla -->
+        <service
+            android:name=".IndicatorService"
+            android:exported="true"
+            android:label="IR Face · carita en la pantalla de bloqueo"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/indicator_service" />
+        </service>
+    </application>
+</manifest>
